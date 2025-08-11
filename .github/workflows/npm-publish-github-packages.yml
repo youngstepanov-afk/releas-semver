@@ -1,10 +1,14 @@
-name: Node.js CI and Release
+name: Node.js CI, Release and Publish
 
 on:
   push:
-    branches: [ main ]
+    branches: [main]
   pull_request:
-    branches: [ main ]
+    branches: [main]
+
+env:
+  NODE_VERSION: 20
+  REGISTRY_URL: https://npm.pkg.github.com
 
 jobs:
   test:
@@ -13,13 +17,14 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: ${{ env.NODE_VERSION }}
       - run: npm ci
       - run: npm test
 
   release:
     needs: test
     runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main' # Запускать только для main ветки
     permissions:
       contents: write
       packages: write
@@ -28,15 +33,25 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          fetch-depth: 0
+          fetch-depth: 0 # Необходимо для semantic-release
+          persist-credentials: false
+          
       - uses: actions/setup-node@v4
         with:
-          node-version: 20
-      - run: npm ci
-      - run: npx semantic-release
+          node-version: ${{ env.NODE_VERSION }}
+          
+      - name: Configure npm for GitHub Packages
+        run: |
+          npm config set @your-github-username:registry ${{ env.REGISTRY_URL }}
+          echo "//npm.pkg.github.com/:_authToken=${{ secrets.GITHUB_TOKEN }}" > ~/.npmrc
+          
+      - run: npm ci --ignore-scripts
+      
+      - name: Release
+        run: npx semantic-release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+          NPM_CONFIG_REGISTRY: ${{ env.REGISTRY_URL }}
 
   publish:
     needs: release
@@ -46,11 +61,20 @@ jobs:
       contents: read
     steps:
       - uses: actions/checkout@v4
+      
       - uses: actions/setup-node@v4
         with:
-          node-version: 20
-          registry-url: https://npm.pkg.github.com/
+          node-version: ${{ env.NODE_VERSION }}
+          registry-url: ${{ env.REGISTRY_URL }}
+          
+      - name: Configure npm
+        run: |
+          npm config set @your-github-username:registry ${{ env.REGISTRY_URL }}
+          echo "//npm.pkg.github.com/:_authToken=${{ secrets.GITHUB_TOKEN }}" > ~/.npmrc
+          
       - run: npm ci
-      - run: npm publish
+      
+      - name: Publish to GitHub Packages
+        run: npm publish
         env:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
