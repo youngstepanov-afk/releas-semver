@@ -24,7 +24,7 @@ jobs:
   release:
     needs: test
     runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/main' # Запускать только для main ветки
+    if: github.ref == 'refs/heads/main'
     permissions:
       contents: write
       packages: write
@@ -33,7 +33,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          fetch-depth: 0 # Необходимо для semantic-release
+          fetch-depth: 0
           persist-credentials: false
           
       - uses: actions/setup-node@v4
@@ -56,6 +56,7 @@ jobs:
   publish:
     needs: release
     runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
     permissions:
       packages: write
       contents: read
