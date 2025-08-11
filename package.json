@@ -1,6 +1,16 @@
 {
   "name": "my-react-app",
   "version": "0.1.0",
+  "release": {
+    "branches": ["main", "next"],
+    "plugins": [
+      "@semantic-release/commit-analyzer",
+      "@semantic-release/release-notes-generator",
+      "@semantic-release/changelog",
+      "@semantic-release/npm",
+      "@semantic-release/git"
+    ]
+  },
   "private": true,
   "dependencies": {
     "@testing-library/dom": "^10.4.1",
@@ -16,7 +26,8 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "release": "semantic-release"
   },
   "eslintConfig": {
     "extends": [
@@ -35,5 +46,13 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "@semantic-release/changelog": "^6.0.3",
+    "@semantic-release/commit-analyzer": "^13.0.1",
+    "@semantic-release/git": "^10.0.1",
+    "@semantic-release/npm": "^12.0.2",
+    "@semantic-release/release-notes-generator": "^14.0.3",
+    "semantic-release": "^24.2.7"
   }
 }
