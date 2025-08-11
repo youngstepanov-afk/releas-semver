@@ -1,3 +1,10 @@
+## [1.0.1](https://github.com/youngstepanov-afk/releas-semver/compare/v1.0.0...v1.0.1) (2025-08-11)
+
+
+### Bug Fixes
+
+* исправлена ошибка в сборке ([1ef5f5b](https://github.com/youngstepanov-afk/releas-semver/commit/1ef5f5b5ddd2d001ecdedf5d4a59e03621340abd))
+
 # 1.0.0 (2025-08-11)
 
 
