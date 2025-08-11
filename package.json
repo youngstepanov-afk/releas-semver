@@ -5,7 +5,10 @@
     "registry": "https://npm.pkg.github.com"
   },
   "release": {
-    "branches": ["main", "next"],
+    "branches": [
+      "main",
+      "next"
+    ],
     "plugins": [
       "@semantic-release/commit-analyzer",
       "@semantic-release/release-notes-generator",
