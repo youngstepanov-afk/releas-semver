@@ -9,6 +9,7 @@ on:
 env:
   NODE_VERSION: 20
   REGISTRY_URL: https://npm.pkg.github.com
+  OWNER: youngstepanov-afk
 
 jobs:
   test:
@@ -21,61 +22,33 @@ jobs:
       - run: npm ci
       - run: npm test
 
-  release:
+  publish:
     needs: test
     runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/main'
     permissions:
       contents: write
       packages: write
-      issues: write
-      pull-requests: write
+      id-token: write
     steps:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
-          persist-credentials: false
-          
-      - uses: actions/setup-node@v4
-        with:
-          node-version: ${{ env.NODE_VERSION }}
-          
-      - name: Configure npm for GitHub Packages
-        run: |
-          npm config set @your-github-username:registry ${{ env.REGISTRY_URL }}
-          echo "//npm.pkg.github.com/:_authToken=${{ secrets.GITHUB_TOKEN }}" > ~/.npmrc
-          
-      - run: npm ci --ignore-scripts
-      
-      - name: Release
-        run: npx semantic-release
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          NPM_CONFIG_REGISTRY: ${{ env.REGISTRY_URL }}
-
-  publish:
-    needs: release
-    runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/main'
-    permissions:
-      packages: write
-      contents: read
-    steps:
-      - uses: actions/checkout@v4
       
       - uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
           registry-url: ${{ env.REGISTRY_URL }}
-          
+      
       - name: Configure npm
         run: |
-          npm config set @your-github-username:registry ${{ env.REGISTRY_URL }}
+          npm config set @${{ env.OWNER }}:registry ${{ env.REGISTRY_URL }}
           echo "//npm.pkg.github.com/:_authToken=${{ secrets.GITHUB_TOKEN }}" > ~/.npmrc
-          
-      - run: npm ci
       
-      - name: Publish to GitHub Packages
+      - run: npm ci
+      - run: npm run build
+      
+      - name: Publish package
         run: npm publish
         env:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
