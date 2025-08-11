@@ -33,10 +33,11 @@ jobs:
       - run: npm ci
       - run: npm run build
       - name: Upload production build
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: production-build
           path: build
+          retention-days: 1  # автоматическое удаление через 1 день
 
   release:
     needs: build
