@@ -37,7 +37,7 @@ jobs:
         with:
           name: production-build
           path: build
-          retention-days: 1  # автоматическое удаление через 1 день
+          retention-days: 1
 
   release:
     needs: build
