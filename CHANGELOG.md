@@ -1,3 +1,10 @@
+# [1.2.0](https://github.com/youngstepanov-afk/releas-semver/compare/v1.1.0...v1.2.0) (2025-08-12)
+
+
+### Features
+
+* ds ([a04d3bf](https://github.com/youngstepanov-afk/releas-semver/commit/a04d3bf5e7e8a87687a53912ee283bafe02a9d3e))
+
 # [1.1.0](https://github.com/youngstepanov-afk/releas-semver/compare/v1.0.1...v1.1.0) (2025-08-11)
 
 
